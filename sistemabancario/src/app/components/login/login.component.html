@@ -1,0 +1,30 @@
+<!-- creacion de formulario -->
+<body>
+  <div class="container_primary">
+    <form [formGroup]="loginForm" (ngSubmit)="submit()">
+      <h1>login</h1>
+      <div class="input_box">
+        <input type="text" formControlName = "username" placeholder="Usuario">
+        <i class="bi bi-person-arms-up"></i>
+      </div>
+      <div class="input_box">
+        <input type="password" formControlName = "password" placeholder="Contraseña">
+        <i class="bi bi-key-fill"></i>
+      </div>
+      <div class="checkbox">
+        <label>
+          <input type="checkbox">Recordar
+        </label>
+        <a href="#">Olvidaste tu contraseña</a>
+      </div>
+      <button type="submit">
+        Ingresar
+      </button>
+      <div class="registro">
+        <p>
+          ¿No tienes cuenta? <a href="#">Registrar</a>
+        </p>
+      </div>
+    </form>
+  </div>
+</body>

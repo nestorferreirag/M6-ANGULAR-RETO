@@ -1,0 +1,100 @@
+<head>
+    <title>Consultas y Transacciones</title>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="https://www.bancolombia.com/wcm/connect/a67af2d6-c768-4f4f-a33b-fd58074f7ce9/logo-bancolombia-black.svg?MOD=AJPERES" alt="Logo Bancolombia">
+        </div>
+        <div class="usuario">Usuario: <span id="nombreUsuario">Nestor</span></div>
+    </header>
+
+    <main class="container">
+        <section class="consultas">
+            <h2>Consultas</h2>
+            <button class="btn" (click)="mostrarFormularioC('conSal')">Consulta Saldo</button>
+            <button class="btn" (click)="mostrarFormularioC('conTx')">Consulta Transacciones</button>
+        </section>
+
+        <section class="transacciones">
+            <h2>Transacciones</h2>
+            <button class="btn" (click)="mostrarFormulario('depSuc')">Depósito desde Sucursal</button>
+            <button class="btn" (click)="mostrarFormulario('depCuenta')">Depósito desde Cuenta</button>
+            <button class="btn" (click)="mostrarFormulario('depCajero')">Depósito desde Cajero</button>
+            <button class="btn" (click)="mostrarFormulario('comFis')">Compra Fisica</button>
+            <button class="btn" (click)="mostrarFormulario('comWeb')">Compra Web</button>
+            <button class="btn" (click)="mostrarFormulario('retCajero')">Retiro desde Cajero</button>
+        </section>
+
+<!-- Formulario solo se muestra cuando el usuario haga clic en el botón -->
+    <div class="form-container" *ngIf="mostrarForm">
+        <h3>{{ tituloFormulario }}</h3>
+
+    <form [formGroup]="transaccionForm" (ngSubmit)="onSubmit()">
+        <label for="cuenta">Cuenta:</label>
+        <input formControlName="cuenta" type="number" id="cuenta" required>
+        <div class="error-message" *ngIf="transaccionForm.get('cuenta')?.invalid">
+            ⚠️ El campo cuenta es obligatorio.
+        </div>
+
+        <label for="monto">Monto:</label>
+        <input formControlName="monto" type="number" id="monto" required>
+        <div class="error-message" *ngIf="transaccionForm.get('monto')?.invalid">
+            ⚠️ El monto debe ser mayor a 0.
+        </div>
+
+        <button class="btn" type="submit" [disabled]="transaccionForm.invalid">Iniciar Proceso</button>
+    </form>
+    <!-- Mostrar mensaje de error de la API -->
+    <div class="error-message" *ngIf="errorMensaje">
+        ❌ {{ errorMensaje }}
+    </div>
+    <p *ngIf="mensajeRespuesta" class="success-message">
+        ✅ {{ mensajeRespuesta }}
+    </p>
+    </div>
+
+    <div class="form-container" *ngIf="mostrarFormC">
+        <h3>{{ tituloFormulario }}</h3>
+
+        
+    <form [formGroup]="transaccionFormC" (ngSubmit)="onSubmitC()">
+        <label for="cuentaId">Cuenta:</label>
+        <input formControlName="cuentaId" type="number" id="cuentaId" required>
+        <div class="error-message" *ngIf="transaccionForm.get('cuentaId')?.invalid">
+            ⚠️ El campo cuenta es obligatorio.
+        </div>
+
+        <button class="btn" type="submit" [disabled]="transaccionFormC.invalid">Iniciar Proceso</button>
+    </form>
+    <!-- Mostrar mensaje de error de la API -->
+    <div class="error-message" *ngIf="errorMensajeC">
+        ❌ {{ errorMensajeC }}
+    </div>
+    <p *ngIf="mensajeRespuestaC && tipoTransaccion === 'conSal'">
+        ✅ {{ mensajeRespuestaC }}
+    </p>
+
+    <table class="transacciones-table" *ngIf="mensajeRespuestaT.length > 0 && tipoTransaccion === 'conTx'">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Cuenta ID</th>
+                <th>Tipo de Transacción</th>
+                <th>Monto</th>
+                <th>Fecha</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let transaccion of mensajeRespuestaT">
+                <td>{{ transaccion.transaccionId }}</td>
+                <td>{{ transaccion.cuentaId }}</td>
+                <td>{{ transaccion.tipoTransaccion }}</td>
+                <td>{{ transaccion.monto | currency }}</td>
+                <td>{{ transaccion.fecha | date:'yyyy-MM-dd HH:mm:ss' }}</td>
+            </tr>
+        </tbody>
+    </table>
+    </div>
+    </main>
+</body>
